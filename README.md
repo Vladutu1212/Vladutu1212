@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @Vladutu1212
 - 👀 I’m interested in MTB, nature, HotWheels cars, computers, programming and tech in general
-- 🌱 I’m currently learning python
+- 🌱 I’m currently learning
 - 💞️ I’m looking to collaborate on ...
 - 📫 How to reach me ... https://www.instagram.com/humavladut/
 
