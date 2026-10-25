@@ -25,8 +25,10 @@ aplicația. Nu ai nevoie de cont STB și nici de permisiuni speciale, doar de in
 - următoarele sosiri (până la 3);
 - ora ultimei actualizări. Dacă nu e internet, afișează ultimele date salvate, marcate cu ⚠︎.
 
-iOS decide cât de des reîmprospătează widgetul (de obicei la 5–15 minute). Apasă pe widget
-pentru date proaspete.
+iOS decide cât de des reîmprospătează widgetul (de obicei la 5–15 minute). Între actualizări,
+numărătoarea continuă pe ecran pe baza ultimei estimări. Apăsarea pe widget deschide meniul
+scriptului; „Previzualizare” arată acolo datele proaspete, dar widgetul de pe ecran se
+actualizează doar când decide iOS.
 
 ## Probleme
 
