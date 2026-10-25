@@ -1,7 +1,15 @@
-# Widget Scriptable: linia 435 → Pasaj CFR Chitila, stația I.N.M.H
+# Widgeturi Scriptable pentru autobuzul 435
 
-Widget pentru iOS ([Scriptable](https://apps.apple.com/app/scriptable/id1405459188)) care arată
-când ajung următoarele autobuze 435 în stația **I.N.M.H**, pe sensul către **Pasaj CFR Chitila**.
+Widgeturi pentru iOS ([Scriptable](https://apps.apple.com/app/scriptable/id1405459188)) care arată
+când ajung următoarele autobuze 435 într-o stație:
+
+| Script | Stația | Sensul |
+|---|---|---|
+| [`autobuz-435-inmh.js`](autobuz-435-inmh.js) | I.N.M.H | spre Pasaj CFR Chitila |
+| [`autobuz-435-darmanesti.js`](autobuz-435-darmanesti.js) | Dărmănești | spre Complex Băneasa |
+
+Scripturile sunt identice, diferă doar `CONFIG` de la început. Le poți folosi pe amândouă în
+același timp, fiecare în widgetul lui.
 
 Datele vin de la serverul folosit de aplicația Info TB (`info.stb.ro`). iOS nu lasă alte
 aplicații să citească datele din Info TB, așa că scriptul întreabă direct serverul, la fel ca
@@ -10,12 +18,12 @@ aplicația. Nu ai nevoie de cont STB și nici de permisiuni speciale, doar de in
 ## Instalare
 
 1. Instalează **Scriptable** din App Store.
-2. În Scriptable apasă **+**, lipește conținutul fișierului
-   [`autobuz-435-inmh.js`](autobuz-435-inmh.js) și denumește scriptul, de ex. `Autobuz 435`.
+2. În Scriptable apasă **+**, lipește conținutul unuia dintre scripturi și denumește-l,
+   de ex. `Autobuz 435` sau `435 Darmanesti`.
 3. Rulează scriptul o dată din aplicație (▶︎) și alege **Previzualizare medie**, ca să verifici
    că apar sosirile.
 4. Pe ecranul principal: ține apăsat → **Editează** → **+** → **Scriptable** → alege mărimea
-   (mic sau mediu) → apasă pe widget → la **Script** alege `Autobuz 435`.
+   (mic sau mediu) → apasă pe widget → la **Script** alege scriptul dorit.
 5. Opțional, pe ecranul de blocare: îl poți adăuga și ca widget dreptunghiular, rotund sau inline.
 
 ## Ce afișează

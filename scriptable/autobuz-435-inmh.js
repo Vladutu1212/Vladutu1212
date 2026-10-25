@@ -216,14 +216,33 @@ function norm(s) {
     .replace(/[^a-z0-9]/g, "");
 }
 
+function words(s) {
+  return String(s || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((w) => w.length > 1);
+}
+
+// Potrivire tolerantă: „Complex Baneasa” = „Complex Comercial Băneasa”, „I.N.M.H” = „INMH”.
 function sameName(a, b) {
   const x = norm(a);
   const y = norm(b);
-  return !!x && !!y && (x === y || x.includes(y) || y.includes(x));
+  if (!x || !y) return false;
+  if (x === y || x.includes(y) || y.includes(x)) return true;
+  const wa = words(a);
+  const wb = words(b);
+  return (wa.length > 0 && wa.every((w) => y.includes(w))) || (wb.length > 0 && wb.every((w) => x.includes(w)));
 }
 
 function configKey() {
   return [CONFIG.line, CONFIG.stopName, CONFIG.directionName, CONFIG.stopId, CONFIG.direction].join("|");
+}
+
+// Chei separate pentru fiecare linie/stație/sens, ca mai multe widgeturi să nu se încurce.
+function cacheKey(name) {
+  return name + "." + norm(CONFIG.line) + "-" + norm(CONFIG.stopName) + "-" + norm(CONFIG.directionName);
 }
 
 // Metoda 1: lista tuturor liniilor → traseul liniei pe fiecare sens → stația.
@@ -313,7 +332,7 @@ async function resolveFromSearch() {
 }
 
 async function resolveTarget() {
-  const cached = storeGetJSON("target");
+  const cached = storeGetJSON(cacheKey("target"));
   if (cached && cached.key === configKey()) return cached.target;
   let target = null;
   try {
@@ -327,7 +346,7 @@ async function resolveTarget() {
       "Nu am găsit stația " + CONFIG.stopName + " pe linia " + CONFIG.line + " spre " + CONFIG.directionName
     );
   }
-  storeSet("target", JSON.stringify({ key: configKey(), target }));
+  storeSet(cacheKey("target"), JSON.stringify({ key: configKey(), target }));
   return target;
 }
 
@@ -386,7 +405,7 @@ async function loadData() {
   if (!arrivals.length) arrivals = await arrivalsFromStopJSON(target);
   arrivals.sort((a, b) => a.at - b.at);
   const result = { key: configKey(), target, arrivals: arrivals.slice(0, CONFIG.maxArrivals), fetchedAt: Date.now() };
-  storeSet("last", JSON.stringify(result));
+  storeSet(cacheKey("last"), JSON.stringify(result));
   return result;
 }
 
@@ -395,7 +414,7 @@ async function getData() {
     return await loadData();
   } catch (e) {
     console.error(e);
-    const last = storeGetJSON("last");
+    const last = storeGetJSON(cacheKey("last"));
     if (last && last.target && last.key === configKey()) {
       // Datele vechi rămân utile: ascundem doar autobuzele care au trecut deja.
       last.arrivals = (last.arrivals || []).filter((a) => a.at > Date.now() - 60 * 1000);
@@ -612,7 +631,7 @@ async function runInApp() {
   const choice = await menu.presentSheet();
   if (choice === -1) return;
   if (choice === 2) {
-    ["target", "last", "userInfo"].forEach(storeRemove);
+    [cacheKey("target"), cacheKey("last"), "userInfo"].forEach(storeRemove);
     const ok = new Alert();
     ok.title = "Gata";
     ok.message = "Stația va fi detectată din nou la următoarea rulare.";
