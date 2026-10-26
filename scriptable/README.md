@@ -47,3 +47,74 @@ actualizează doar când decide iOS.
 
 API-ul Info TB nu e public și oficial. Dacă STB îl schimbă, scriptul poate avea nevoie de
 actualizare.
+
+---
+
+# Widget Scriptable pentru alarme
+
+[`alarme.js`](alarme.js) arată alarmele **active** din aplicația Ceas, în widget mic, mediu sau
+mare (și pe ecranul de blocare).
+
+iOS nu lasă nicio aplicație, nici Scriptable, să citească direct alarmele din Ceas. Doar
+aplicația **Scurtături** le poate citi, așa că o scurtătură le trimite scriptului, care le
+salvează. Widgetul arată ultimele alarme primite. O automatizare rulează scurtătura singură
+de fiecare dată când închizi Ceasul, ca widgetul să fie mereu la zi.
+
+## 1. Scriptul
+
+1. În Scriptable apasă **+**, lipește conținutul lui `alarme.js` și denumește-l **`Alarme`**.
+
+## 2. Scurtătura „Sincronizare Alarme”
+
+În Scurtături → **+**, denumește-o exact `Sincronizare Alarme` și adaugă acțiunile:
+
+1. **Find Alarms** (Găsește alarmele), din categoria Ceas, fără filtre. Pe versiunile mai vechi
+   de iOS se numește **Get All Alarms** (Obține toate alarmele).
+2. **Repetă cu fiecare** (Repeat with Each) pentru *Alarme*.
+3. În interiorul repetării, o acțiune **Text** cu conținutul de mai jos. Fiecare câmp e
+   *Element repetat* (Repeat Item) cu proprietatea indicată (atinge variabila → alege
+   proprietatea):
+
+   ```
+   [Time]|[Label]|[Repeat Days]|[Is Enabled]
+   ```
+
+   - `Time`: atinge-o → **Format dată: Personalizat** → `HH:mm`;
+   - `Label`, `Repeat Days` (zilele de repetare) și `Is Enabled`;
+   - între câmpuri pune caracterul `|`, fără spații.
+4. După **Sfârșit repetare**: **Combină textul** (Combine Text) din *Rezultatele repetării*,
+   cu separator **Personalizat**: `##`.
+5. **Text**: `SYNC##` urmat de variabila *Text combinat*.
+6. **Run Script** (Scriptable) → Script: `Alarme`, Parameter: *Text* de la pasul 5.
+   **Run In App** și **Show When Run** dezactivate.
+
+Rulează scurtătura o dată. Trebuie să răspundă „N alarme active salvate”.
+
+Dacă vreo proprietate nu există sau are alt nume la tine, poți lăsa câmpul gol; doar ora e
+obligatorie. Fără `Is Enabled` apar toate alarmele, inclusiv cele oprite. Fără `Repeat Days`,
+fiecare alarmă e tratată ca zilnică.
+
+## 3. Automatizări (recomandat)
+
+În Scurtături → **Automatizare** → **+**:
+
+- **Aplicație** → Ceas → **Este închisă** → *Rulează imediat* → `Sincronizare Alarme`.
+  Așa, orice modificare făcută în Ceas ajunge în widget.
+- Opțional: **Alarmă** → **Este oprită** (orice alarmă) → *Rulează imediat* →
+  `Sincronizare Alarme`, ca alarmele de o singură dată să dispară după ce sună.
+
+## 4. Widgetul
+
+Pe ecranul principal: ține apăsat → **Editează** → **+** → **Scriptable** → mărimea dorită →
+apasă pe widget → **Script**: `Alarme`.
+
+- **Mic**: următoarea alarmă (ora, eticheta, numărătoarea inversă) și orele următoare.
+- **Mediu**: următoarea alarmă mare și încă 3 alarme cu timpul rămas.
+- **Mare**: următoarea alarmă și încă 4 cu zilele de repetare și timpul rămas, plus ora
+  ultimei sincronizări.
+- **Ecranul de blocare**: dreptunghiular, rotund sau inline.
+
+Alarmele sunt ordonate după când sună următoarea dată (ține cont de zilele de repetare).
+Apăsarea pe widget rulează scurtătura. Dacă datele au mai mult de 24 h, apare ⚠︎.
+iOS decide când reîmprospătează widgetul, așa că o modificare poate apărea cu câteva minute
+întârziere. Numărătoarea până la următoarea alarmă e mereu corectă.
