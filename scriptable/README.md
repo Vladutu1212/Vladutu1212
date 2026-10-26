@@ -68,7 +68,8 @@ de fiecare dată când închizi Ceasul, ca widgetul să fie mereu la zi.
 
 În Scurtături → **+**, denumește-o exact `Sincronizare Alarme` și adaugă acțiunile:
 
-1. **Obține toate alarmele** (Get All Alarms), din categoria Ceas.
+1. **Find Alarms** (Găsește alarmele), din categoria Ceas, fără filtre. Pe versiunile mai vechi
+   de iOS se numește **Get All Alarms** (Obține toate alarmele).
 2. **Repetă cu fiecare** (Repeat with Each) pentru *Alarme*.
 3. În interiorul repetării, o acțiune **Text** cu conținutul de mai jos. Fiecare câmp e
    *Element repetat* (Repeat Item) cu proprietatea indicată (atinge variabila → alege
