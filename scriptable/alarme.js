@@ -42,8 +42,8 @@ function loadData() {
   }
 }
 
-function saveData(alarms) {
-  Keychain.set(STORE_KEY, JSON.stringify({ updated: Date.now(), alarms }));
+function saveData(alarms, raw) {
+  Keychain.set(STORE_KEY, JSON.stringify({ updated: Date.now(), alarms, raw }));
 }
 
 // ---------------------------------------------------------------------------
@@ -457,6 +457,7 @@ async function runInApp() {
   menu.addAction("Previzualizare medie");
   menu.addAction("Previzualizare mare");
   menu.addAction("Rulează scurtătura acum");
+  menu.addAction("Arată datele primite");
   menu.addDestructiveAction("Șterge alarmele salvate");
   menu.addCancelAction("Închide");
   const choice = await menu.presentSheet();
@@ -466,6 +467,15 @@ async function runInApp() {
     return;
   }
   if (choice === 4) {
+    // Textul exact trimis de scurtătură, util când o alarmă apare greșit.
+    const info = new Alert();
+    info.title = "Date primite";
+    info.message = data ? updatedLabel(data.updated, now) + "\n\n" + (data.raw || "(nimic)") : "(nimic)";
+    info.addAction("OK");
+    await info.present();
+    return;
+  }
+  if (choice === 5) {
     if (Keychain.contains(STORE_KEY)) Keychain.remove(STORE_KEY);
     return;
   }
@@ -480,7 +490,8 @@ async function runInApp() {
 if (args.shortcutParameter != null) {
   // Rulat din Scurtături: salvăm alarmele primite.
   const alarms = parseInput(args.shortcutParameter);
-  saveData(alarms);
+  const raw = Array.isArray(args.shortcutParameter) ? args.shortcutParameter.join(RECORD_SEP) : String(args.shortcutParameter);
+  saveData(alarms, raw.slice(0, 2000));
   Script.setShortcutOutput(alarms.length + " alarme active salvate");
 } else if (config.runsInWidget) {
   Script.setWidget(buildWidget(loadData(), config.widgetFamily));
