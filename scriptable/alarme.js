@@ -74,7 +74,9 @@ function parseTime(s) {
 }
 
 function isOff(s) {
-  return ["no", "nu", "false", "0", "off", "dezactivat", "dezactivata", "inactiv", "inactiva"].includes(norm(s));
+  // Ignorăm virgulele sau spațiile rămase de la un Enter pus în scurtătură.
+  const v = norm(s).replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, "");
+  return ["no", "nu", "false", "0", "off", "dezactivat", "dezactivata", "inactiv", "inactiva"].includes(v);
 }
 
 function parseInput(input) {

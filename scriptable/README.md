@@ -76,11 +76,11 @@ de fiecare dată când închizi Ceasul, ca widgetul să fie mereu la zi.
    proprietatea):
 
    ```
-   [Ora]|[Etichetă]|[Repetare]|[Este activată]
+   [Time]|[Label]|[Repeat Days]|[Is Enabled]
    ```
 
-   - `Ora` (Time): atinge-o → **Format dată: Personalizat** → `HH:mm`;
-   - `Etichetă` (Label), `Repetare` (Repeat), `Este activată` (Is Enabled);
+   - `Time`: atinge-o → **Format dată: Personalizat** → `HH:mm`;
+   - `Label`, `Repeat Days` (zilele de repetare) și `Is Enabled`;
    - între câmpuri pune caracterul `|`, fără spații.
 4. După **Sfârșit repetare**: **Combină textul** (Combine Text) din *Rezultatele repetării*,
    cu separator **Personalizat**: `##`.
@@ -91,7 +91,7 @@ de fiecare dată când închizi Ceasul, ca widgetul să fie mereu la zi.
 Rulează scurtătura o dată. Trebuie să răspundă „N alarme active salvate”.
 
 Dacă vreo proprietate nu există sau are alt nume la tine, poți lăsa câmpul gol; doar ora e
-obligatorie. Fără `Este activată` apar toate alarmele, inclusiv cele oprite. Fără `Repetare`,
+obligatorie. Fără `Is Enabled` apar toate alarmele, inclusiv cele oprite. Fără `Repeat Days`,
 fiecare alarmă e tratată ca zilnică.
 
 ## 3. Automatizări (recomandat)
